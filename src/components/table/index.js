@@ -60,13 +60,15 @@ const Table = React.memo(forwardRef(({ prefix, data = {}, disableHeaderSort, sea
     }
     return getFullColumns();
   }, [lang]);
-  const getFieldProps = useCallback((prop) => {
+  const getFieldProps = useCallback((prop, field) => {
     if (prop){
       const domain = domains.filter(d => d.id === prop)[0] || { len: '', scale: '' };
       const dataType = mapping.filter(m => m.id === domain.applyFor)[0]?.[db] || '';
       return {
-        len: domain.len === undefined ? '' : domain.len,
-        scale: domain.scale === undefined ? '' : domain.scale,
+        // eslint-disable-next-line no-nested-ternary
+        len: field.len !== undefined ? field.len : (domain.len === undefined ? '' : domain.len),
+        // eslint-disable-next-line no-nested-ternary
+        scale: field.scale !== undefined ? field.scale : (domain.scale === undefined ? '' : domain.scale),
         type: dataType,
       };
     }
@@ -114,6 +116,7 @@ const Table = React.memo(forwardRef(({ prefix, data = {}, disableHeaderSort, sea
     updateSelectedColumns(empty);
   };
   const updateTableDataByName = (f, name, e) => {
+    console.log(`updateTableDataByName: ${name}`);
     let value = e.target.value;
     if (checkboxComponents.includes(name)) {
       value = e.target.checked;
@@ -139,11 +142,11 @@ const Table = React.memo(forwardRef(({ prefix, data = {}, disableHeaderSort, sea
               others = {
                 notNull: true,
               };
-            } else if((name === 'type' || name === 'len' || name === 'scale')
+            } else if((name === 'type' /* || name === 'len' || name === 'scale' */) // 检查到修改len,scale变更会重置数据域，修复
               && !!field.domain && (f[name] !== value)){
               // 将当前domain的对应的数据落地
               others = {
-                ...getFieldProps(field.domain),
+                ...getFieldProps(field.domain, field),
                 domain: '',
               };
             }

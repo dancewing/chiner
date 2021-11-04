@@ -83,7 +83,7 @@ export default React.memo(({f, i, expand, onMouseOver, tempHeaders, calcPosition
                 checkboxComponents={checkboxComponents}
                 f={{
                   ...f,
-                  ...getFieldProps(f.domain),
+                  ...getFieldProps(f.domain, f),
                 }}
                 name={h?.refKey}
                 onChange={e => updateTableDataByName(f, h?.refKey, e)}

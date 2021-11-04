@@ -994,8 +994,8 @@ export const transform = (f, dataSource, code, type = 'id') => {
     // 转换数据域
     const domain = domains.filter(dom => dom[type] === f.domain)[0] || { len: '', scale: '' };
     const dataType = mappings.filter(m => m.id === domain.applyFor)[0]?.[code || db] || '';
-    temp.len = domain.len === undefined ? '' : domain.len;
-    temp.scale = domain.scale === undefined ? '' : domain.scale;
+    temp.len = f.len === undefined ?  (domain.len === undefined ? '' : domain.len) : f.len;
+    temp.scale = f.scale === undefined ? (domain.scale === undefined ? '' : domain.scale): f.scale;
     temp.type = dataType;
     temp.domain = type === 'id' ? (domain.defName || domain.defKey) : f.domain;
   }
