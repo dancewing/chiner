@@ -65,10 +65,8 @@ const Table = React.memo(forwardRef(({ prefix, data = {}, disableHeaderSort, sea
       const domain = domains.filter(d => d.id === prop)[0] || { len: '', scale: '' };
       const dataType = mapping.filter(m => m.id === domain.applyFor)[0]?.[db] || '';
       return {
-        // eslint-disable-next-line no-nested-ternary
-        len: field.len !== undefined ? field.len : (domain.len === undefined ? '' : domain.len),
-        // eslint-disable-next-line no-nested-ternary
-        scale: field.scale !== undefined ? field.scale : (domain.scale === undefined ? '' : domain.scale),
+        len: _.get(field, 'len', _.get(domain, 'len', '')),
+        scale: _.get(field, 'scale', _.get(domain, 'scale', '')),
         type: dataType,
       };
     }
