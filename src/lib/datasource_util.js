@@ -6,6 +6,7 @@ import emptyProjectTemplate from './emptyProjectTemplate';
 import { separator } from '../../profile';
 import {firstUp} from './string';
 import {compareVersion} from './update';
+import {getLen, getScale} from '../lib/domain';
 
 export const allType = [
   { type: 'entity', name: 'entities', defKey: 'defKey' },
@@ -994,8 +995,8 @@ export const transform = (f, dataSource, code, type = 'id') => {
     // 转换数据域
     const domain = domains.filter(dom => dom[type] === f.domain)[0] || { len: '', scale: '' };
     const dataType = mappings.filter(m => m.id === domain.applyFor)[0]?.[code || db] || '';
-    temp.len = _.get(f, 'len', _.get(domain, 'len', ''));
-    temp.scale = _.get(f, 'scale', _.get(domain, 'scale', ''));
+    temp.len = getLen(f, domain);
+    temp.scale = getScale(f, domain);
     temp.type = dataType;
     temp.domain = type === 'id' ? (domain.defName || domain.defKey) : f.domain;
   }

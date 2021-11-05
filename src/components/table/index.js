@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import * as _ from 'lodash/object';
 import * as Component from 'components';
+import {getLen, getScale} from '../../lib/domain';
 
 import { getFullColumns, validateFields, emptyField, getColumnWidth } from '../../lib/datasource_util';
 import { moveArrayPositionByArray } from '../../lib/array_util';
@@ -65,8 +66,8 @@ const Table = React.memo(forwardRef(({ prefix, data = {}, disableHeaderSort, sea
       const domain = domains.filter(d => d.id === prop)[0] || { len: '', scale: '' };
       const dataType = mapping.filter(m => m.id === domain.applyFor)[0]?.[db] || '';
       return {
-        len: _.get(field, 'len', _.get(domain, 'len', '')),
-        scale: _.get(field, 'scale', _.get(domain, 'scale', '')),
+        len: getLen(field, domain),
+        scale: getScale(field, domain),
         type: dataType,
       };
     }
